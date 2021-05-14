@@ -1,0 +1,27 @@
+name: deploy-container
+
+on:
+  push:
+    branches:
+      - master:
+    paths:
+      - 'packages/container/**' # when change occurs on master branch inside path container folder
+
+defaults:
+  run:
+    working-directory: packages/container # set working directory
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # use a ubuntu/linux based virtul machine
+
+    steps:
+      - uses: actions/checkout@v2 # checkout the code in the virtual machine
+      - run: npm install
+      - run: npm run build
+
+      - uses: chrislennon/action-aws-cli@v1.1 # deploy to aws using aws cli
+      - run: aws s3 sync dist s3://${{ secrets.AWS.S3.BUCKET_NAME }}/container/latest # sync contents of dist generated out of build with s3 bucket
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
