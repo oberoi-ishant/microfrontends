@@ -6,9 +6,10 @@ const packageJson = require('../package.json');
 const domain = process.env.PRODUCTION_DOMAIN;
 
 const prodConfig = {
-  mode: "production",
+  mode: 'production',
   output: {
-    filename: "[name].[contenthash].js"
+    filename: '[name].[contenthash].js',
+    publicPath: '/container/latest/'
   },
   plugins: [
     new ModuleFederationPlugin({

@@ -81,3 +81,14 @@ Create Distribution:
   AWS_S3_BUCKET_NAME: mfe-dashboard-oi,
   AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
   These github secrets can only be accessed from github actions.
+
+  Now on a push to master branch, the workflow will run and files will be copied to Amazon S3.
+  If you access the domain name, you can see a blank page.
+  In browser console there is an error that our main.js script file is not found.
+  This is because it is accessing it like <domain>/main.js
+  But in S3 the content is organised like
+  container -> latest -> main.js
+  So we will set Public Path in webpack prod config.
+  publicPath: '/container/latest/'
+  So all files which webpack will build, we need public path to be accessible. like our main.js. Now the webpack html plugin will take into account this public path when adding 
+  src for scripts inside the index.html file.
