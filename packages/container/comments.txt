@@ -80,7 +80,7 @@ Create Distribution:
   Add the three secrets.
   AWS_S3_BUCKET_NAME: mfe-dashboard-oi,
   AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
-  These github secrets can only be accessed from github actions.
+  These github secrets can only be accessed from github actions..
 
   Now on a push to master branch, the workflow will run and files will be copied to Amazon S3.
   If you access the domain name, you can see a blank page.
