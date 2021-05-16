@@ -1,3 +1,5 @@
+FYI: S3 buckets do not have Folders!!!
+
 We will hold .js and .html files in Amazon S3.
 Then will setup a Amazon CloudFront (CDN) distribution. A distribution is a set of files that we want to share with outside world. Here we will pull these files from S3 bucket.
 So when we issue a request from browser, it will go to Amazon CloudFront. Then CloudFront
