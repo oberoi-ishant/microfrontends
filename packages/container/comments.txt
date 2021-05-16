@@ -1,0 +1,81 @@
+We will hold .js and .html files in Amazon S3.
+Then will setup a Amazon CloudFront (CDN) distribution. A distribution is a set of files that we want to share with outside world. Here we will pull these files from S3 bucket.
+So when we issue a request from browser, it will go to Amazon CloudFront. Then CloudFront
+will talk to S3 bucket where files are saved and serve from there.
+
+Services - search S3
+1. Create Amazon S3 bucket
+2. Since the bucket is secure it does not allow any public access.
+3. To allow our bucket files to be shared online thru CloudFront, change propteries:
+  a.  Static Web Hosting:
+        index document: index.html
+          Save changes
+  b.  Permissions
+        Block public access:
+          Edit: Block all public access - Uncheck this.
+            Save changes. (Ignore warnings, we want files in bucket to be available online)
+  c.  Edit bucket policy -
+        A policy is a set of rules that allows AWS services to communicate with each other.
+        Policy generator: (opens in a new tab)
+          Type: S3 bucket policy
+          Principal: *
+          Actions:
+            Get Object - Select
+            ARN (Amazon Resource Name): Copy from Edit Bucket Policy Tab.
+              ARN should follow the following format: arn:aws:s3:::<bucket_name>/<key_name>.
+              Followed by /*
+              So your ARN should be "arn:aws:s3:::mfe-dashboard-oi/*" VERY IMPORTANT add /*
+            Click Add Statement
+
+            Click Generate Policy --- Whatever JSON is generated copy it and paste it to the Edit bucket policy text area in previous tab.
+            Save Changes.
+
+
+Services - search CloudFront
+Create Distribution:
+1. Create a Web distribution.
+  a. Domain name: Click and Select your bucket.
+  b. Default Cache Behavior Settings - Redirect HTTP to HTTPS
+  c. Distribution Settings
+    SSL Certificate - Default CloudFront Certificate (*.cloudfront.net)
+      [else if you have a domain name use Custom SSL Certificate]
+  Click - Create Distribution
+
+  Wait for Distribution status In Progress --> Deployed.
+  Edit Distribution
+
+    a. General -> Default Root Object - /container/latest/index.html
+      - click Yes, Edit
+    b. Error pages -> Create Custom Error Response.
+      HTTP Error Code - 403 Forbidden
+      Response Page Path - /container/latest/index.html
+      HTTP Response Code - 200 OK
+      Click - Create
+      This is just saying on error return this custom html page.
+
+      Note: In General Tab: We see the domain name: dny87fn2dfwm0.cloudfront.net
+
+  Now to create the Github environment variables for AWS_ACCESS_KEY_ID, AWS_S3_BUCKET_NAME
+  and AWS_SECRET_ACCESS_KEY we will first create a User using IAM service in Amazon console.
+  Then create these variables there and then add to github environment variables.
+  This will bridge the gap between github actions and Amazon S3 bucket.
+
+  Services - search IAM
+  Users - Create User
+  a. User name - mfe-github-action
+    Select: Programmatic Access.
+    Next
+    Permissions: Ideal is to create a policy to access only this s3 bucket but in interest of time and demo
+    we will just select exiting policy.
+    Attach existing policies directly
+      - search s3 --> AmazonS3FullAccess (Select)
+      - search cloudfront - CloudFrontFullAccess (Select)
+      Next
+      Tags (optional) - leave
+      Create User.
+
+  Got to github repo -- Secrets Add Secrets.
+  Add the three secrets.
+  AWS_S3_BUCKET_NAME: mfe-dashboard-oi,
+  AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+  These github secrets can only be accessed from github actions.
