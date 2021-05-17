@@ -87,8 +87,13 @@ Create Distribution:
   In browser console there is an error that our main.js script file is not found.
   This is because it is accessing it like <domain>/main.js
   But in S3 the content is organised like
-  container -> latest -> main.js
+  container -> latest -> main.js (Default Root Object in CloudFrontDistribution setting)
   So we will set Public Path in webpack prod config.
   publicPath: '/container/latest/'
   So all files which webpack will build, we need public path to be accessible. like our main.js. Now the webpack html plugin will take into account this public path when adding
   src for scripts inside the index.html file.
+
+  Now on every build the index.html will have the updated path, but will poin to old
+  main.[hash].js. So we need to invalidate this distribution (cache invalidate).
+  So add the AWS_DISTRIBUTION_ID as a secret in github repo. ID is you distribution id: E3944IXIJMRVYM
+  Now update container.yml to invalidate cache in the distribution index.html
