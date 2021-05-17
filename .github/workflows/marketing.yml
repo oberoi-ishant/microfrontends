@@ -1,15 +1,15 @@
-name: deploy-container
+name: deploy-marketing
 
 on:
   push:
     branches:
       - master
     paths:
-      - 'packages/container/**' # when change occurs on master branch inside path container folder
+      - 'packages/marketing/**' # when change occurs on master branch inside path marketing folder
 
 defaults:
   run:
-    working-directory: packages/container # set working directory
+    working-directory: packages/marketing # set working directory
 
 jobs:
   build:
@@ -19,19 +19,16 @@ jobs:
       - uses: actions/checkout@v2 # checkout the code in the virtual machine
       - run: npm install
       - run: npm run build
-        env:
-          PRODUCTION_DOMAIN: ${{ secrets.PRODUCTION_DOMAIN }}
 
       - uses: shinyinc/action-aws-cli@v1.2 # deploy to aws using aws cli
-      - run: aws s3 sync dist s3://${{ secrets.AWS_S3_BUCKET_NAME }}/container/latest
+      - run: aws s3 sync dist s3://${{ secrets.AWS_S3_BUCKET_NAME }}/marketing/latest
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       # Whenever we update the contents of a file whose name remains same, cloudFront will not pick up
       # the changes. Hence we need to invalidate the distribution and give name of the files to invalidate
-      # here, since we will use container index.html in container everytime, therefore we need to invalidate this to
-      # get the updated contents on every build. (get new name[hash] of main.[hash].js)
-      - run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths "/container/latest/index.html"
+      # here, since we will use marketing remoteEntry.js in container everytime, therefore we need to invalidate this.
+      - run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths "/marketing/latest/remoteEntry.js"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

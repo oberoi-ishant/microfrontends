@@ -97,3 +97,18 @@ Create Distribution:
   main.[hash].js. So we need to invalidate this distribution (cache invalidate).
   So add the AWS_DISTRIBUTION_ID as a secret in github repo. ID is you distribution id: E3944IXIJMRVYM
   Now update container.yml to invalidate cache in the distribution index.html
+
+  Now add similar marketing.yml file.
+  In container -> webpack.prod.js we need to update the domain to fetch remoteEntry.js using the environment variable PRODUCTION_DOMAIN.
+  Also in container webpack prod update remoteEntry path to 'marketing@${domain}/marketing/latest/remoteEntry.js'
+  in github create a new secret --> PRODUCTION_DOMAIN: https://<DOMAIN_NAME>
+  DOMAIN_NAME is in General tab in CloudFront.
+  like: https://dny87fn2dfwm0.cloudfront.net
+
+  Now update container.yml -> npm run build step to add env variable PRODUCTION_DOMAIN.
+  This ensures that the PRODUCTION_DOMAIN var is now available to npm run build command from
+  github secrets
+  Now in marketing -> webpack.prod.js update publicPath
+  publicPath: "/marketing/latest/"
+  This will ensure that remoteEntry file which is created by ModuleFederationPlugin will now
+  be accessible using this public path that corresponds to structure in S3 bucket.
