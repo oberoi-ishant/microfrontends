@@ -65,7 +65,12 @@ const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export default function Album() {
   const classes = useStyles();
-
+  // These classnames will be applied in development. Check in localhost.
+  // In production, classnames will be shortened like jss1, jss2.
+  // Use createGenerateClassName to give a className prefix to avoid naming collisions
+  // in production b/w diff apps using same css-in-js lib. Chekc App.js
+  // Always check documentation of CSS-in-JS lib to see about random class name generation.
+  // This is for material-ui library.
   return (
     <React.Fragment>
       <main>

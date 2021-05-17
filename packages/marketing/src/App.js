@@ -8,6 +8,7 @@ import Landing from './components/Landing';
 const generateClassName = createGenerateClassName({
   productionPrefix: 'ma'
 });
+// Now all PRODUCTION classnames will start from `ma`.
 
 export default () => {
   return (
