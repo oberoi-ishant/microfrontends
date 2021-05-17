@@ -112,3 +112,21 @@ Create Distribution:
   publicPath: "/marketing/latest/"
   This will ensure that remoteEntry file which is created by ModuleFederationPlugin will now
   be accessible using this public path that corresponds to structure in S3 bucket.
+
+Now commit and push everything to master.
+You should see two deployments. One for Container and one for marketing.
+Now in S3 there should be marketing folder as well.
+After this load the DOMAIN_NAME in browser. <https://dny87fn2dfwm0.cloudfront.net/>
+You should see the application deployed. Check network tab to see remoteEntry correct url
+as : https://dny87fn2dfwm0.cloudfront.net/marketing/latest/remoteEntry.js
+So it is served by cloudfront with the publicPath
+Same for main.js
+https://dny87fn2dfwm0.cloudfront.net/container/latest/main.76129062f57c6c4a1185.js
+
+FYI:
+You see a lot js files in network requests. This is because we have used
+shared: PackageJson.Dependencies. This ensure every dependency is loaded as a separate file.
+If you remove this, shared. We will see less network reqs but then different mircofrontend
+projects may load duplicate Dependencies once they load.
+In http 2.0 it is advisable to load small size large number of js files as opposed to single large js file. So maybe good for future.
+
