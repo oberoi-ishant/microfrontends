@@ -91,4 +91,4 @@ Create Distribution:
   So we will set Public Path in webpack prod config.
   publicPath: '/container/latest/'
   So all files which webpack will build, we need public path to be accessible. like our main.js. Now the webpack html plugin will take into account this public path when adding
-  src for scripts inside the index.html file..
+  src for scripts inside the index.html file.

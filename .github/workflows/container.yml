@@ -13,7 +13,7 @@ defaults:
 
 jobs:
   build:
-    runs-on: ubuntu-latest # use a ubuntu/linux based virtul machine
+    runs-on: ubuntu-18.04 # use a ubuntu/linux based virtul machine
 
     steps:
       - uses: actions/checkout@v2 # checkout the code in the virtual machine
