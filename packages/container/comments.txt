@@ -41,7 +41,7 @@ Create Distribution:
   c. Distribution Settings
     SSL Certificate - Default CloudFront Certificate (*.cloudfront.net)
       [else if you have a domain name use Custom SSL Certificate]
-  Click - Create Distribution.
+  Click - Create Distribution
 
   Wait for Distribution status In Progress --> Deployed.
   Edit Distribution
