@@ -1,8 +1,8 @@
-import { mount } from 'marketing/MarketingApp';
+import { mount } from 'auth/AuthApp';
 import React, { useRef, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
-export default () => {
+export default ({ onSignIn }) => {
   const ref = useRef(null);
   // This is the history object used in container.
   // It is the copy of the BrowserHistory
@@ -10,6 +10,8 @@ export default () => {
 
   useEffect(()=> {
     const { onParentNavigate } = mount(ref.current, {
+      // Setting intial pathname for memory history object in auth app
+      // to start from.
       initialPath: history.location.pathname,
       onNavigate: (location) => {
         const { pathname: nextPathname } = location; // path in Marketing app
@@ -26,7 +28,8 @@ export default () => {
           // i updated, you update.
           history.push(nextPathname);
         }
-      }
+      },
+      onSignIn // Passing the onSignIn function to auth app
     });
     // history.listen is called every time new route is invoked.
     // This time when container route changes, we setup a listener on the
