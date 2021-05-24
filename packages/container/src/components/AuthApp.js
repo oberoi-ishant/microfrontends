@@ -10,7 +10,7 @@ export default ({ onSignIn }) => {
 
   useEffect(()=> {
     const { onParentNavigate } = mount(ref.current, {
-      // Setting intial pathname for memory history object in auth app
+      // Set intial pathname for memory history object in auth app
       // to start from.
       initialPath: history.location.pathname,
       onNavigate: (location) => {
